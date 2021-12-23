@@ -23,7 +23,7 @@ const UseRefExercise = () => {
                 style={{
                     height: 40,
                     width: 60,
-                    color: "white"
+                    color: "black"
                 }}
             >
                 <small>Блок</small>

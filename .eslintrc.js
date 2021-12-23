@@ -20,6 +20,7 @@ module.exports = {
             { anonymous: "always", named: "never" }
         ],
         "multiline-ternary": ["off"],
+        "react/display-name": ["off"],
         quotes: [
             "error",
             "double",
@@ -27,6 +28,6 @@ module.exports = {
                 allowTemplateLiterals: true
             }
         ],
-        "no-trailing-spaces": ["error", { skipBlankLines: true }]
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }, {"skipBlankLines": true }]
     }
 };

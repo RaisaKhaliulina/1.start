@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { validator } from "../../../utils/validator";
 import api from "../../../api";
-import TextField from "../../common/form/textField";
-import SelectField from "../../common/form/selectField.jsx";
-
+import { TextField, SelectField } from "../../common/form";
 const EditUserPage = () => {
     const { userId } = useParams();
     const history = useHistory();
@@ -18,7 +15,7 @@ const EditUserPage = () => {
     });
     const [professions, setProfession] = useState([]);
     const [qualities, setQualities] = useState({});
-    const [errors, setErrors] = useState({});
+    
     const getProfessionById = (id) => {
         for (const prof in professions) {
             const profData = professions[prof];
@@ -36,11 +33,7 @@ const EditUserPage = () => {
         }
         return qualitiesQrray;
     };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const isValid = validate();
-        if (!isValid) return;
+    const handleSubmit = () => {
         const { profession, qualities } = data;
         api.users
             .update(userId, {
@@ -67,7 +60,7 @@ const EditUserPage = () => {
         if (data._id) setIsLoading(false);
     }, [data]);
 
-    const validatorConfog = {
+    const validatorConfig = {
         email: {
             isRequired: {
                 message: "Электронная почта обязательна для заполнения"
@@ -76,63 +69,39 @@ const EditUserPage = () => {
                 message: "Email введен некорректно"
             }
         },
-
         name: {
             isRequired: {
                 message: "Введите ваше имя"
             }
         }
     };
-    useEffect(() => validate(), [data]);
-    const handleChange = (target) => {
-        setData((prevState) => ({
-            ...prevState,
-            [target.name]: target.value
-        }));
-    };
-    const validate = () => {
-        const errors = validator(data, validatorConfog);
-        setErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
-    const isValid = Object.keys(errors).length === 0;
     return (
         <div className="container mt-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
                     {!isLoading && Object.keys(professions).length > 0 ? (
-                        <form onSubmit={handleSubmit}>
+                        <FormComponent onSubmit = { handleSubmit } validatorConfig={ validatorConfig }> 
                             <TextField
                                 label="Имя"
                                 name="name"
-                                value={data.name}
-                                onChange={handleChange}
-                                error={errors.name}
-                            />
+                            />    
                             <TextField
                                 label="Электронная почта"
                                 name="email"
-                                value={data.email}
-                                onChange={handleChange}
-                                error={errors.email}
                             />
                             <SelectField
                                 label="Выбери свою профессию"
                                 defaultOption="Choose..."
                                 options={professions}
-                                onChange={handleChange}
-                                value={data.profession}
-                                error={errors.profession}
-                            />
-
-                            <button
+                                name="profession"
+                                />
+                                <button
                                 type="submit"
-                                disabled={!isValid}
                                 className="btn btn-primary w-100 mx-auto"
                             >
                                 Обновить
-                            </button>
-                        </form>
+                                </button>
+                        </FormComponent>
                     ) : (
                         "Loading..."
                     )}
